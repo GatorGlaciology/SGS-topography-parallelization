@@ -23,9 +23,6 @@ if __name__ == '__main__':
     # normal score transformation of bed elevation
     df_data.loc[:,'Norm_Bed'], nst_trans = sgs_preprocess.nscore(df_data, z)
     
-    # shuffle df of points to simulate (random path)
-    df_nan = sgs_preprocess.shuffle_pred_grid(df_nan)
-    
     # adaptive clustering
     max_pts = 100           # maximum number of points in each cluster
     min_len = 50000         # minimum side length of squares
@@ -40,6 +37,9 @@ if __name__ == '__main__':
     gamma = sgs_preprocess.get_variograms(df_data, n_lags, max_lag, processes)
     
     for i in range(num_realizations):
+    
+        # shuffle df of points to simulate (random path)
+        df_nan = sgs_preprocess.shuffle_pred_grid(df_nan)
     
         # get kriging weights in parallel
         max_num_nn = 50     # maximum number of nearest neighbors
