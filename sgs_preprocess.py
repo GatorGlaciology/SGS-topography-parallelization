@@ -72,8 +72,8 @@ def make_grid(xmin, xmax, ymin, ymax, res):
         rows - number of rows
         cols - number of columns
     """
-    cols = np.rint((xmax - xmin)/res).astype(int)
-    rows = np.rint((ymax - ymin)/res).astype(int)
+    cols = np.ceil((xmax - xmin)/res).astype(int)
+    rows = np.ceil((ymax - ymin)/res).astype(int) # NECESSARY CHANGE RES = 700 
     x = np.arange(xmin,xmax,res); y = np.arange(ymin,ymax,res)
     xx, yy = np.meshgrid(x,y)
     x = np.reshape(xx, (int(rows)*int(cols), 1))
@@ -312,7 +312,7 @@ def get_variograms(df_data, n_lags, max_lag, processes):
     pool = mp.Pool(processes)
     out = pool.starmap(Variogram, args)
   
-    print(f'\t{round(len(out)/(time.time()-start), 2)} varios/s, {len(out)} clusters\n')
+    print(f'\t{round((time.time()-start), 2)} seconds to complete\n')
     
     # save variogram parameters in dictionary [azimuth, nugget, major_range, minor_range, sill]
     azimuth = 0

@@ -29,7 +29,7 @@ if __name__ == '__main__':
     df_data, i = sgs_preprocess.adaptive_partitioning(df_data, xmin, xmax, ymin, ymax, max_pts, min_len)
     
     # get number of processes to use
-    processes = int(os.cpu_count() * 1.5)
+    processes = int(os.cpu_count())
     
     # get variograms for each cluster in parallel
     max_lag = 30000         # maximum lag distance
@@ -37,6 +37,9 @@ if __name__ == '__main__':
     gamma = sgs_preprocess.get_variograms(df_data, n_lags, max_lag, processes)
     
     for i in range(num_realizations):
+
+        print(f'-----------------------------------------')
+        print(f'\tStarting Realization #{i+1}\n')
     
         # shuffle df of points to simulate (random path)
         df_nan = sgs_preprocess.shuffle_pred_grid(df_nan)
@@ -51,13 +54,17 @@ if __name__ == '__main__':
     
         # concatenate data frames
         df_sim = sgs_alg.concat(df_data, pred_xyzk)
-    
+
+        #reverse normal score transformation
+        tmp = df_sim['Norm_Bed'].values.reshape(-1,1)
+        df_sim[z] = nst_trans.inverse_transform(tmp)
+
         # save dataframe to csv
         filepath = Path(f'Output/sim_{i+1}.csv')
         filepath.parent.mkdir(parents=True, exist_ok=True)
         df_sim.to_csv(filepath, index=False)
         
         # output graph
-        sgs_plts.plt_graph(df_sim, nst_trans, i)
+        sgs_plts.plt_graph(df_sim, z, i)
         
     sys.exit()

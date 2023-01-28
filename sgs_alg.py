@@ -58,7 +58,7 @@ def kriging_weights(df_data, df_nan, gamma, rad, max_num_nn, res, processes, xx,
         # aggregate output into a dictionary to look up data by index
         kr_dictionary[idx] = (weights, covariance_array, nearest_indices, cluster_num)
     
-    print(f'\t{round(len(out)/(time.time()-start), 2)} iters/s, {i} iters\n')
+    print(f'\t{round((time.time()-start), 2)} seconds to complete \n')
 
     return kr_dictionary
 
@@ -376,7 +376,7 @@ def sgs_pred_Z(kr_dictionary, df_data, df_nan, gamma, xx, yy, zz, cluster):
         
     pred_xyzk = df_nan.rename(columns = {"X": xx, "Y": yy, "Z": zz, "K": cluster})
         
-    print(f'\t{round(len(df_nan)/(time.time()-start), 2)} iters/s, {i} iters\n')
+    print(f'\t{round((time.time()-start), 2)} seconds to complete\n')
 
     return pred_xyzk
 

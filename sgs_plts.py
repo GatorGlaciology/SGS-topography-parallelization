@@ -1,9 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.preprocessing import QuantileTransformer
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from numpy.random import default_rng
 
 
-def plt_graph(sim, nst_trans, i):
+def plt_graph(sim, zz, i):
     """
     performs preliminary calculations, calls plot function and saves result
     Inputs:
@@ -11,16 +13,13 @@ def plt_graph(sim, nst_trans, i):
         nst_trans - fitted normal score transformer object
         i - simulation number
     """
-    # reverse normal score transformation
-    tmp = sim['Norm_Bed'].values.reshape(-1,1)
-    sim_trans = nst_trans.inverse_transform(tmp)
     
     # mean and SD of bed elevation values (for range)
-    mu = np.mean(sim_trans)
-    sig = np.std(sim_trans)
+    mu = np.mean(sim[zz])
+    sig = np.std(sim[zz])
     
-    title = [f'Bed Elevation Model {i+1}','Bed elevation [m]']
-    plt_trans = beddata(sim, sim_trans, mu-(3*sig), mu+(3*sig), title)
+    title = [f'Bed Elevation Model {i+1}','Bed elevation (m)']
+    plt_trans = beddata(sim, sim[zz], mu-(3*sig), mu+(3*sig), title)
     plt_trans.savefig(f'Output/Plot_{i+1}.png', bbox_inches = 'tight')
     
     
@@ -47,3 +46,98 @@ def beddata(df, z, min, max, title):
     
     return plt
 
+# for jupyter notebook
+
+def make_colorbar(fig, im, vmin, vmax, clabel, ax=None):
+    if ax is None:
+        ax = plt.gca()
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes('right', size='5%', pad=0.1)
+    cbar = plt.colorbar(im, ticks=np.linspace(vmin, vmax, 11), cax=cax)
+    cbar.set_label(clabel, rotation=270, labelpad=15)
+    return cbar
+
+def splot2D(df, title, xlabel='X (m)', ylabel='Y (m)', clabel='Bed (m)', x='X', y='Y', c='Bed',
+            vmin=-400, vmax=600, s=0.5):
+    fig, ax = plt.subplots(1, figsize=(5,5))
+    im = plt.scatter(df[x], df[y], c=df[c], vmin=vmin, vmax=vmax,
+                     marker='.', s=s, cmap='gist_earth')
+    plt.title(title)
+    plt.xlabel(xlabel); plt.ylabel(ylabel)
+    plt.locator_params(nbins=5)
+
+    # make colorbar
+    cbar = make_colorbar(fig, im, vmin, vmax, clabel)
+
+    ax.axis('scaled')
+    plt.show()
+
+
+def mplot1(Pred_grid_xy, sim, rows, cols, title, xlabel='X [m]', ylabel='Y [m]',
+           clabel='Bed [m]', vmin=-400, vmax=600, hillshade=False, titlepad=None):
+    x_mat = Pred_grid_xy[:,0].reshape((rows, cols))
+    y_mat = Pred_grid_xy[:,1].reshape((rows, cols))
+    mat = sim.reshape((rows, cols))
+
+    xmin = Pred_grid_xy[:,0].min(); xmax = Pred_grid_xy[:,0].max()
+    ymin = Pred_grid_xy[:,1].min(); ymax = Pred_grid_xy[:,1].max()
+    
+    cmap=plt.get_cmap('gist_earth')
+
+    fig, ax = plt.subplots(1, figsize=(5,5))
+    im = plt.pcolormesh(x_mat, y_mat, mat, vmin=vmin, vmax=vmax, cmap=cmap)
+    
+    if hillshade == True:
+        # Shade from the northeast, with the sun 45 degrees from horizontal
+        ls = LightSource(azdeg=45, altdeg=45)
+        
+        # leaving the dx and dy as 1 means a vertical exageration equal to dx/dy
+        hillshade = ls.hillshade(mat, vert_exag=1, dx=1, dy=1, fraction=1.0)
+        plt.pcolormesh(x_mat, y_mat, hillshade, cmap='gray', alpha=0.1)
+        
+    if titlepad is None:
+        plt.title(title)
+    else:
+        plt.title(title, pad=titlepad)
+    plt.xlabel(xlabel); plt.ylabel(ylabel)
+    plt.xticks(np.linspace(xmin, xmax, 5))
+    plt.yticks(np.linspace(ymin, ymax, 5))
+
+    # make colorbar
+    if hillshade is False:
+        cbar = make_colorbar(fig, im, vmin, vmax, clabel)
+    
+    ax.axis('scaled')
+    plt.show()
+
+
+def plt_clusters(df_grid):
+
+    clusters, counts = np.unique(df_grid.cluster, return_counts=True)
+    n_clusters = len(clusters)
+
+    # randomize colormap
+    rng = default_rng()
+    vals = np.linspace(0, 1.0, n_clusters)
+    rng.shuffle(vals)
+    cmap = plt.cm.colors.ListedColormap(plt.cm.nipy_spectral(vals))
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11,4))
+
+    ax1.locator_params(nbins=5)
+
+    im = ax1.scatter(df_grid['X'], df_grid['Y'], c=df_grid['cluster'], cmap=cmap, marker=".", s=1)
+    im.set_clim(-0.5, max(clusters)+0.5)
+    ax1.set_title('Clusters')
+    ax1.set_xlabel('X (m)')
+    ax1.set_ylabel('Y (m)')
+    cbar = plt.colorbar(im, orientation="vertical", ax=ax1)
+    cbar.set_ticks(np.linspace(0, max(clusters), n_clusters))
+    cbar.set_ticklabels(range(n_clusters))
+    cbar.set_label('Clustered data', rotation=270, labelpad=15)
+    ax1.axis('scaled')
+
+    ax2.bar(clusters, counts)
+    ax2.set_xlabel('Cluster ID')
+    ax2.set_title('Counts')
+    plt.show()
