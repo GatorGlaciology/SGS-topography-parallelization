@@ -12,7 +12,7 @@ visulation of the simulated bed topography using [PyVista](https://github.com/py
 We hope our script will make topographic modeling with SGS more accessible and time efficient.
 If you have any feedback or suggestions, feel free contact me at [nathanschoedl@ufl.edu](nathanschoedl@ufl.edu). 
 
-photo here
+![git_readme_photo](https://user-images.githubusercontent.com/73554694/215350469-bc989f1a-9e6a-421f-96f1-66f9665de092.png)
 
 ## Python Script
 
@@ -40,15 +40,24 @@ This script enables users to generate multiple topogrphic realizations at a spec
 ## Notebook 
 
 **SGS_parallel_demo.ipynb** is designed to demonstrate the steps of SGS and increase understanding on how SGS was parallelized. Additionally, users can
-input their own dataset to generate results. Using PyVista, after simulating the bed elevation values, we can visualize the topography as shown below:
+input their own dataset to generate results. To run, please ensure all dependencies are installed. Using PyVista, after simulating the bed elevation 
+values, we can visualize the topography as shown below:
 
-video 
+![gif_10mb](https://user-images.githubusercontent.com/73554694/215351079-0d6759d6-1b58-43c6-96d7-f346fb5e71c6.gif)
 
 ## Dependencies
 
-* h
-* g
-* f
+* **numpy**
+* **pandas**
+* **skgstat**
+* **multiprocessing**
+* **sklearn**
+* **matplotlib**
+* **pyvista**
+   * Only required for Jupyter Notebook
+   * **ipyvtklink** required for interactive visualization
+   
+* **os**, **sys**, **pathlib**, **math**, **time**, **random**, **itertools**
 
 ## Contributors 
 
