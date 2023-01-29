@@ -32,7 +32,7 @@ def menu():
     """
     print('\nSubglacial Topographic Modeling using Parallel Implimentation of SGS')
     print('--------------------------------------------------------------------')
-    file_name = input('File name: ')
+    file_name = input('Dataset File path (E.g. - Data/test_data.csv): ')
     x = input('\nColumn name for X values: ')
     y = input('\nColumn name for Y values: ')
     z = input('\nColumn name for bed elevation values: ')
@@ -73,7 +73,7 @@ def make_grid(xmin, xmax, ymin, ymax, res):
         cols - number of columns
     """
     cols = np.ceil((xmax - xmin)/res).astype(int)
-    rows = np.ceil((ymax - ymin)/res).astype(int) # NECESSARY CHANGE RES = 700 
+    rows = np.ceil((ymax - ymin)/res).astype(int)
     x = np.arange(xmin,xmax,res); y = np.arange(ymin,ymax,res)
     xx, yy = np.meshgrid(x,y)
     x = np.reshape(xx, (int(rows)*int(cols), 1))
