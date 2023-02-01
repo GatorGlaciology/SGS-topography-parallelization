@@ -12,7 +12,8 @@ visulation of the simulated bed topography using [PyVista](https://github.com/py
 We hope our script will make topographic modeling with SGS more accessible and time efficient.
 If you have any feedback or suggestions, feel free contact me at [nathanschoedl@ufl.edu](nathanschoedl@ufl.edu). 
 
-![git_readme_photo](https://user-images.githubusercontent.com/73554694/215350469-bc989f1a-9e6a-421f-96f1-66f9665de092.png)
+![Github_p2](https://user-images.githubusercontent.com/73554694/215893567-e631e438-ca84-44b2-98ab-ff98ec079d22.png)
+
 
 ## Python Script
 
