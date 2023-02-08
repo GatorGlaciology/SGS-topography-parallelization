@@ -50,10 +50,10 @@ if __name__ == '__main__':
         kr_dictionary = sgs_alg.kriging_weights(df_data, df_nan, gamma, rad, max_num_nn, res, processes, x, y, 'Norm_Bed', 'cluster')
     
         # sequential gausian simulation
-        pred_xyzk = sgs_alg.sgs_pred_Z(kr_dictionary, df_data, df_nan, gamma, x, y, 'Norm_Bed', 'cluster')
+        data_xyzk, pred_xyzk = sgs_alg.sgs_pred_Z(kr_dictionary, df_data, df_nan, gamma, x, y, 'Norm_Bed', 'cluster')
     
         # concatenate data frames
-        df_sim = sgs_alg.concat(df_data, pred_xyzk)
+        df_sim = sgs_alg.concat(data_xyzk, pred_xyzk)
 
         #reverse normal score transformation
         tmp = df_sim['Norm_Bed'].values.reshape(-1,1)
@@ -65,6 +65,6 @@ if __name__ == '__main__':
         df_sim.to_csv(filepath, index=False)
         
         # output graph
-        sgs_plts.plt_graph(df_sim, z, i)
+        sgs_plts.plt_graph(df_sim, df_bed, res, x, y, z, i)
         
     sys.exit()

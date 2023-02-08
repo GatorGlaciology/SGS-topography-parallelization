@@ -373,12 +373,13 @@ def sgs_pred_Z(kr_dictionary, df_data, df_nan, gamma, xx, yy, zz, cluster):
         z_lookup[row.Index] = np.random.default_rng().normal(est, math.sqrt(var))
         df_nan.loc[row.Index, 'Z'] = z_lookup[row.Index]
         df_nan.loc[row.Index, 'K'] = cluster_num
-        
+    
+    data_xyzk = df_data.rename(columns = {"X": xx, "Y": yy, "Z": zz, "K": cluster})
     pred_xyzk = df_nan.rename(columns = {"X": xx, "Y": yy, "Z": zz, "K": cluster})
         
     print(f'\t{round((time.time()-start), 2)} seconds to complete\n')
 
-    return pred_xyzk
+    return data_xyzk, pred_xyzk
 
 
 def concat(df_data, pred_xyzk):
