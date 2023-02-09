@@ -74,3 +74,19 @@ Allan Zhang, University of Florida
 Matthew Hibbs, University of Florida
 
 Mathieu Gravey, Utrecht University
+
+## Cite as
+
+Schoedl, Nathan, MacKie, Emma, Field, Michael, Stubbs, Eric, Zhang, Allan, Hibbs, Matthew, Gravey, Mathieu. (2023). SGS Topography Parallelization (1.0).
+Zenodo. http://doi.org/10.5281/zenodo.7627029
+
+## Datasets
+
+The demo use radar bed measurements in northwest Greenland from the Center for the Remote Sensing of Ice Sheets (CReSIS, 2020) and measurements from Pine Island Glacier in West Antarctica (Fremand, 2022).
+
+CReSIS. 2020. Radar depth sounder, Lawrence, Kansas, USA. Digital Media. http://data.cresis.ku.edu/.
+
+Fremand, A. C., Fretwell, P., Bodart, J., Pritchard, H. D., Aitken, A., Bamber, J. L., ... & Zirizzotti, A. (2022).
+Antarctic Bedmap data: FAIR sharing of 60 years of ice bed, surface and thickness data. Earth System Science Data Discussions, 1-25
+
+
