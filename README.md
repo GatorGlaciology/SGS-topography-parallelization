@@ -3,11 +3,11 @@
 # SGS Topography Parallelization
 
 A parallelized Sequential Gaussian Simulation (SGS) script in Python designed for simulating subglacial topography. It is modeled after the
-non-stationary SGS with adaptive partitioning technique presened in the open source package [GStatSim](https://github.com/GatorGlaciology/GStatSim).
+non-stationary SGS with adaptive partitioning technique presented in the open source package [GStatSim](https://github.com/GatorGlaciology/GStatSim).
 Our script is intended for geostaticians interested in reducing the time required to generate subglacial topographic realizations. 
 Using our parallelization strategy, have noticed a speed improvement of up to 14x when compared with serial implementations of SGS.
 Additionally, we created a Jupyter notebook that walks through the steps of our parallelized algorithm. This notebook features an interactive 3D 
-visulation of the simulated bed topography using [PyVista](https://github.com/pyvista/pyvista).
+visualization of the simulated bed topography using [PyVista](https://github.com/pyvista/pyvista).
 
 We hope our script will make topographic modeling with SGS more accessible and time efficient.
 If you have any feedback or suggestions, feel free contact me at [nathanschoedl@ufl.edu](nathanschoedl@ufl.edu). 
@@ -17,7 +17,7 @@ If you have any feedback or suggestions, feel free contact me at [nathanschoedl@
 
 ## Python Script
 
-This script enables users to generate multiple topogrphic realizations at a specified resolution using subglacial bed-elevation datasets. 
+This script enables users to generate multiple topographic realizations at a specified resolution using subglacial bed-elevation datasets. 
 
 ### Files required to execute script:
 
