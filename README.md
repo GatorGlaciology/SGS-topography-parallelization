@@ -44,7 +44,7 @@ This script enables users to generate multiple topogrphic realizations at a spec
 input their own dataset to generate results. To run, please ensure all dependencies are installed. Using PyVista, after simulating the bed elevation 
 values, we can visualize the topography as shown below:
 
-![gif_10mb](https://user-images.githubusercontent.com/73554694/215351079-0d6759d6-1b58-43c6-96d7-f346fb5e71c6.gif)
+![Final_readme](https://user-images.githubusercontent.com/73554694/217956514-0386089a-c404-4a22-be4c-63add0fc980a.gif)
 
 ## Dependencies
 
@@ -54,11 +54,10 @@ values, we can visualize the topography as shown below:
 * **multiprocessing**
 * **sklearn**
 * **matplotlib**
+* **itertools**
 * **pyvista**
    * Only required for Jupyter Notebook
    * **ipyvtklink** required for interactive visualization
-   
-* **os**, **sys**, **pathlib**, **math**, **time**, **random**, **itertools**
 
 ## Contributors 
 
@@ -74,3 +73,4 @@ Allan Zhang, University of Florida
 
 Matthew Hibbs, University of Florida
 
+Mathieu Gravey, Utrecht University
