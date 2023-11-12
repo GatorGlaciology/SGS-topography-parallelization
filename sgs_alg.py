@@ -116,8 +116,8 @@ def NNS_cluster(all_pts_before, rad, max_num_nn, loc):
         K - cluster value assigned to current point
         nearest_indices - indicies of nearest neigbors
     """
-    locx = loc[0]
-    locy = loc[1]
+    locx = loc.iloc[0]
+    locy = loc.iloc[1]
     data = all_pts_before.copy()
     centered_array = center(data['X'].values, data['Y'].values, locx, locy)
     data["angles"] = np.arctan2(centered_array[0], centered_array[1])

@@ -12,10 +12,10 @@ import os
 if __name__ == '__main__':
 
     # retrieve user parameters
-    file_name, x, y, z, xmin, xmax, ymin, ymax, res, num_realizations = sgs_preprocess.menu()
+    in_file_name, out_file_name, x, y, z, xmin, xmax, ymin, ymax, res, num_realizations = sgs_preprocess.menu()
     
     # read data from input file
-    df_bed = pd.read_csv(file_name)
+    df_bed = pd.read_csv(in_file_name)
     
     # grid data
     df_data, grid_matrix, df_nan = sgs_preprocess.grid_data(df_bed, xmin, xmax, ymin, ymax, res, x, y, z)
@@ -60,7 +60,8 @@ if __name__ == '__main__':
         df_sim[z] = nst_trans.inverse_transform(tmp)
 
         # save dataframe to csv
-        filepath = Path(f'Output/sim_{i+1}.csv')
+        out_file_name += f'_{i+1}.csv'
+        filepath = Path(out_file_name)
         filepath.parent.mkdir(parents=True, exist_ok=True)
         df_sim.to_csv(filepath, index=False)
         

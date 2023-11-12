@@ -32,7 +32,8 @@ def menu():
     """
     print('\nSubglacial Topographic Modeling using Parallel Implimentation of SGS')
     print('--------------------------------------------------------------------')
-    file_name = input('Dataset File path (E.g. - Data/test_data.csv): ')
+    in_file_name = input('Dataset File path (E.g. - Data/test_data.csv): ')
+    out_file_name = input('\nOutput File path (E.g. - Output/Real/verical): ')
     x = input('\nColumn name for X values: ')
     y = input('\nColumn name for Y values: ')
     z = input('\nColumn name for bed elevation values: ')
@@ -48,7 +49,7 @@ def menu():
     print(f'\n---------------------------------------------------------------------------------')
     
     
-    return file_name, x, y, z, xmin, xmax, ymin, ymax, res, num_realizations
+    return in_file_name, out_file_name, x, y, z, xmin, xmax, ymin, ymax, res, num_realizations
 
 
 ###################
