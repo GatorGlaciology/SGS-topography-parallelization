@@ -5,22 +5,44 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from numpy.random import default_rng
 from matplotlib.colors import LightSource
 
+types = {"grid": "Grid", "griddiag": "Diagonal Grid", "horiz": "Horizontal",
+         "vert": "Vertical", "negdiag": "Negative Diagonal", "posdiag": "Positive Diagonal"}
 
-def plt_graph(sim, df_bed, res, x, y, z, i):
+def diff_graph(xy, diff, res, x, y, out_file_plt, type, other):
 
     # 2D hillshade topographic plot
-    title = f'Bed Elevation Model {i+1}'
+    title = f'{types[type]} Error'
+
+    mu = np.mean(diff); sd = np.std(diff)
+    vmin = mu - 3*sd ; vmax = mu + 3*sd
+
+    diff = diff.to_numpy(); other = other.to_numpy()
+    diff[np.abs(diff) < 0.001] = np.nan
+    diff = np.ma.array(diff, mask=np.isnan(diff))
+
+    xmin = np.min(xy[x]); xmax = np.max(xy[x]) + res
+    ymin = np.min(xy[y]); ymax = np.max(xy[y]) + res
+
+    grid_xy, rows, cols = prediction_grid(xmin, xmax, ymin, ymax, res)
+    
+    plot_i = mplot(grid_xy, diff, rows, cols, title, vmin = vmin, vmax = vmax, hillshade=False)
+    plot_i.savefig(out_file_plt, bbox_inches = 'tight')
+
+def plt_graph(sim, res, x, y, z, out_file_plt, type):
+
+    # 2D hillshade topographic plot
+    title = f'{types[type]} Path Model'
 
     mu = np.mean(sim[z]); sd = np.std(sim[z])
     vmin = mu - 3*sd ; vmax = mu + 3*sd
 
-    xmin = np.min(df_bed[x]); xmax = np.max(df_bed[x])
-    ymin = np.min(df_bed[y]); ymax = np.max(df_bed[y])
+    xmin = np.min(sim[x]); xmax = np.max(sim[x]) + res
+    ymin = np.min(sim[y]); ymax = np.max(sim[y]) + res
 
     grid_xy, rows, cols = prediction_grid(xmin, xmax, ymin, ymax, res)
     
     plot_i = mplot(grid_xy, sim[[z]].to_numpy(), rows, cols, title, vmin = vmin, vmax = vmax, hillshade=True)
-    plot_i.savefig(f'Output/Plot_{i+1}.png', bbox_inches = 'tight')
+    plot_i.savefig(out_file_plt, bbox_inches = 'tight')
     
     
 def mplot(Pred_grid_xy, sim, rows, cols, title, xlabel='X [m]', ylabel='Y [m]', 
@@ -32,7 +54,8 @@ def mplot(Pred_grid_xy, sim, rows, cols, title, xlabel='X [m]', ylabel='Y [m]',
     xmin = Pred_grid_xy[:,0].min(); xmax = Pred_grid_xy[:,0].max()
     ymin = Pred_grid_xy[:,1].min(); ymax = Pred_grid_xy[:,1].max()
     
-    cmap=plt.get_cmap('gist_earth')
+    cmap=plt.get_cmap('RdBu')
+    cmap.set_bad('black',1.)
 
     fig, ax = plt.subplots(1, figsize=(5,5))
     im = plt.pcolormesh(x_mat, y_mat, mat, vmin=vmin, vmax=vmax, cmap=cmap)

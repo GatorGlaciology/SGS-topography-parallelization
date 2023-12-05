@@ -9,6 +9,67 @@ import sys
 import os
 
 
+def run(in_file_name, out_file_name, out_img, x, y, z, type, res=500, num_realizations=1):
+
+    xmin, xmax, ymin, ymax = -1620000, -1520000, -250000, -110000
+
+    # read data from input file
+    df_bed = pd.read_csv(in_file_name)
+    
+    # grid data
+    df_data, grid_matrix, df_nan = sgs_preprocess.grid_data(df_bed, xmin, xmax, ymin, ymax, res, x, y, z)
+    
+    # normal score transformation of bed elevation
+    df_data.loc[:,'Norm_Bed'], nst_trans = sgs_preprocess.nscore(df_data, z)
+    
+    # adaptive clustering
+    max_pts = 100           # maximum number of points in each cluster
+    min_len = 50000         # minimum side length of squares
+    df_data, i = sgs_preprocess.adaptive_partitioning(df_data, xmin, xmax, ymin, ymax, max_pts, min_len)
+    
+    # get number of processes to use
+    processes = int(os.cpu_count())
+    
+    # get variograms for each cluster in parallel
+    max_lag = 30000         # maximum lag distance
+    n_lags = 100            # number of bins
+    gamma = sgs_preprocess.get_variograms(df_data, n_lags, max_lag, processes)
+    
+    for i in range(num_realizations):
+
+        print(f'-----------------------------------------')
+        print(f'\tStarting Simulation\n')
+    
+        # shuffle df of points to simulate (random path)
+        df_nan = sgs_preprocess.shuffle_pred_grid(df_nan)
+    
+        # get kriging weights in parallel
+        max_num_nn = 50     # maximum number of nearest neighbors
+        rad = 30000         # search radius
+        kr_dictionary = sgs_alg.kriging_weights(df_data, df_nan, gamma, rad, max_num_nn, res, processes, x, y, 'Norm_Bed', 'cluster')
+    
+        # sequential gausian simulation
+        data_xyzk, pred_xyzk = sgs_alg.sgs_pred_Z(kr_dictionary, df_data, df_nan, gamma, x, y, 'Norm_Bed', 'cluster')
+    
+        # concatenate data frames
+        df_sim = sgs_alg.concat(data_xyzk, pred_xyzk)
+
+        #reverse normal score transformation
+        tmp = df_sim['Norm_Bed'].values.reshape(-1,1)
+        df_sim[z] = nst_trans.inverse_transform(tmp)
+
+        # save dataframe to csv
+        out_file_csv = out_file_name #+ f'_{i+1}.csv'
+        filepath = Path(out_file_csv)
+        filepath.parent.mkdir(parents=True, exist_ok=True)
+        df_sim.to_csv(filepath, index=False)
+        
+        # output graph
+        out_file_plt = out_img #+ f'_plt_{i+1}.png'
+        sgs_plts.plt_graph(df_sim, res, x, y, z, out_file_plt, type)
+
+
+
 if __name__ == '__main__':
 
     # retrieve user parameters
@@ -60,12 +121,13 @@ if __name__ == '__main__':
         df_sim[z] = nst_trans.inverse_transform(tmp)
 
         # save dataframe to csv
-        out_file_name += f'_{i+1}.csv'
-        filepath = Path(out_file_name)
+        out_file_csv = out_file_name + f'_{i+1}.csv'
+        filepath = Path(out_file_csv)
         filepath.parent.mkdir(parents=True, exist_ok=True)
         df_sim.to_csv(filepath, index=False)
         
         # output graph
-        sgs_plts.plt_graph(df_sim, df_bed, res, x, y, z, i)
+        out_file_plt = out_file_name + f'_plt_{i+1}.png'
+        sgs_plts.plt_graph(df_sim, df_bed, res, x, y, z, out_file_plt, i)
         
     sys.exit()
