@@ -24,7 +24,7 @@ if __name__ == '__main__':
     df_data.loc[:,'Norm_Bed'], nst_trans = sgs_preprocess.nscore(df_data, z)
     
     # adaptive clustering
-    max_pts = 100           # maximum number of points in each cluster
+    max_pts = 1000000           # maximum number of points in each cluster
     min_len = 50000         # minimum side length of squares
     df_data, i = sgs_preprocess.adaptive_partitioning(df_data, xmin, xmax, ymin, ymax, max_pts, min_len)
     
@@ -65,6 +65,6 @@ if __name__ == '__main__':
         df_sim.to_csv(filepath, index=False)
         
         # output graph
-        sgs_plts.plt_graph(df_sim, df_bed, res, x, y, z, i)
+        sgs_plts.plt_graph(df_sim, res, x, y, z, i)
         
     sys.exit()

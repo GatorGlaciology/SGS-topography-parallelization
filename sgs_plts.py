@@ -6,7 +6,7 @@ from numpy.random import default_rng
 from matplotlib.colors import LightSource
 
 
-def plt_graph(sim, df_bed, res, x, y, z, i):
+def plt_graph(sim, res, x, y, z, i):
 
     # 2D hillshade topographic plot
     title = f'Bed Elevation Model {i+1}'
@@ -14,8 +14,8 @@ def plt_graph(sim, df_bed, res, x, y, z, i):
     mu = np.mean(sim[z]); sd = np.std(sim[z])
     vmin = mu - 3*sd ; vmax = mu + 3*sd
 
-    xmin = np.min(df_bed[x]); xmax = np.max(df_bed[x])
-    ymin = np.min(df_bed[y]); ymax = np.max(df_bed[y])
+    xmin = np.min(sim[x]); xmax = np.max(sim[x]) + res
+    ymin = np.min(sim[y]); ymax = np.max(sim[y]) + res
 
     grid_xy, rows, cols = prediction_grid(xmin, xmax, ymin, ymax, res)
     
